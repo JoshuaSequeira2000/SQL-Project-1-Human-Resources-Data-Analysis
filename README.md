@@ -1,1 +1,1 @@
-# SQL Project 1 - Exploratory Data Anaylsis - Human Resourses Database Analysis.
+# SQL Project 1 - Exploratory Data Analysis - Human Resourses Database Analysis.
