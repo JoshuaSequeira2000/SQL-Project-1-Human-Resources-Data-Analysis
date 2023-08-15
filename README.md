@@ -1,33 +1,21 @@
 # SQL Project 1 - Exploratory Data Analysis - Human Resources Database Analysis.
 
--- Selecting the database.
-use [HR Database]
+## 1) Functions (Scalar, Inline, Multi-Table)
+A) Scalar function to provide the average salary per department.
+
+### Code:
+create function Average_Salary_Per_Department(@DepartmentID int)\
+returns int\
+begin\
+	declare @ReturnValue int\
+	select @ReturnValue = AVG(salary) from employees e\
+	inner join departments d on e.department_id = d.department_id\
+	where @DepartmentID = d.department_id\
+	return @ReturnValue\
+end\
 GO
 
--- Select statements for all the tables.
-select * from [dbo].[countries]
-select * from [dbo].[departments]
-select * from [dbo].[dependents]
-select * from [dbo].[employees]
-select * from [dbo].[jobs]
-select * from [dbo].[locations]
-select * from [dbo].[regions]
-GO
-
--- Functions (Scalar, Inline, Multi-Table)
--- 1) Scalar function to provide the average salary per department.
-create function Average_Salary_Per_Department(@DepartmentID int)
-returns int
-begin
-	declare @ReturnValue int
-	select @ReturnValue = AVG(salary) from employees e
-	inner join departments d on e.department_id = d.department_id
-	where @DepartmentID = d.department_id
-	return @ReturnValue
-end
-GO
-
--- Using the above function with a select statement.
+### Using the above function with a select statement.\
 select *, dbo.Average_Salary_Per_Department(department_id) as Average_Salary_Per_Department from employees
 GO
 
