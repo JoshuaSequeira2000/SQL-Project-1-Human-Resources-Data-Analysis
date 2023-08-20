@@ -1,4 +1,4 @@
-# SQL Project 1 - Exploratory Data Analysis - Human Resources Database Analysis.
+# SQL Project 1 - Exploratory Data Analysis - Human Resources Data Analysis.
 
 ## Complete code attached - Human Resources Data Analysis.sql
 
