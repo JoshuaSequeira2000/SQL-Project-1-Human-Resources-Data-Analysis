@@ -6,10 +6,10 @@
 
 #### 1) Scalar functions to provide the average salary per department.
 ```
-create function Average_Salary_Per_Department(@DepartmentID int)
-returns int
+create function Average_Salary_Per_Department(@DepartmentID int) -- stores the department ID value passed by the user as an int data type.
+returns int 
 begin
-	declare @ReturnValue int
+	declare @ReturnValue int -- declaring a variable to store the avg salary of the department.
 	select @ReturnValue = AVG(salary) from employees e
 	inner join departments d on e.department_id = d.department_id
 	where @DepartmentID = d.department_id
@@ -32,10 +32,10 @@ GO
 
 #### 2) Scalar function to find the total number of employees working in each department.
 ```
-create function Total_Employees_Per_Department(@DepartmentID int)
+create function Total_Employees_Per_Department(@DepartmentID int) -- stores the department ID value passed by the user as an int data type.
 returns int
 begin
-	declare @ReturnValue int
+	declare @ReturnValue int -- declaring a variable to store the number of employees working in each department.
 	select @ReturnValue = COUNT(e.employee_id) from employees e
 	inner join departments d on e.department_id = d.department_id
 	where @DepartmentID = d.department_id
@@ -59,10 +59,10 @@ GO
 
 #### 3) Scalar function to find the number of employees from each country.
 ```
-create function Number_Of_Employees_Per_Country(@CountryID char(2))
+create function Number_Of_Employees_Per_Country(@CountryID char(2)) -- stores the country ID value passed by the user as a char data type.
 returns char(2)
 begin
-	declare @ReturnValue char(2)
+	declare @ReturnValue char(2) -- declaring a variable to store the number of employees from each country.
 		select @ReturnValue = COUNT(e.employee_id) from employees e 
 		left join departments d on e.department_id = d.department_id
 		left join locations l on d.location_id = l.location_id
@@ -89,8 +89,8 @@ GO
 
 #### 4) Inline table function to find the number of employees from each region.
 ```
-create function Total_Employees_Per_Region(@RegionID tinyint)
-returns table as return
+create function Total_Employees_Per_Region(@RegionID tinyint) -- stores the region ID value passed by the user as a tinyint data type.
+returns table as return -- Returns an entire table as result
 	(select count(e.employee_id) as Total_Number_Of_Employees, r.region_id, r.region_name from employees e 
 	 inner join departments d on e.department_id = d.department_id inner join locations l
 	 on l.location_id = d.location_id inner join countries c on c.country_id = l.country_id inner join regions r on
@@ -107,26 +107,27 @@ GO
 
 #### 5) Multi Statement Table Function which segregates the employees based on their salary.
 ```
-create function Employee_Salary_Details(@EmployeeID int)
-returns @ReturnValue table
+create function Employee_Salary_Details(@EmployeeID int) -- Stores the Employee ID value passed by the user as int data type
+returns @ReturnValue table -- Returns an entire table, used If Else to get the appropriate result.
 (Employee_ID smallint, Employee_Salary int, Employee_Designation varchar(15))
 as
 begin
-	if exists(select * from employees where @EmployeeID = employee_id)
+	if exists(select * from employees where @EmployeeID = employee_id) -- Checks if the employee ID value passed by user exists in the database.
 		begin
-			insert into @ReturnValue(Employee_ID, Employee_Salary, Employee_Designation)
+			insert into @ReturnValue(Employee_ID, Employee_Salary, Employee_Designation) -- inserted the columns into table @ReturnValue
 			select employee_id, salary, case when salary < 3000 then 'Intern' 
 											 when salary between 3000 and 6000 then 'Associate'
 											 when salary between 6001 and 12000 then 'Manager'
 											 when salary between 12001 and 18000 then 'Senior Manager'
-											 when salary > 18000 then 'Team Lead' end Employee_Designation
-											 from employees
+											 when salary > 18000 then 'Team Lead'
+											 end Employee_Designation -- case statement used to check the the salary value against multiple conditions.
+											 from employees 
 			where @EmployeeID = employee_id
 		end
 	else
 		begin
 			insert into @ReturnValue(Employee_ID, Employee_Salary, Employee_Designation)
-			select 0, 0, 0
+			select 0, 0, 0 -- when the IF condition fails, the Else condition gets trigger and 0,0,0 is inserted into the @ReturnValue table.
 		end
 	return
 end
@@ -138,9 +139,9 @@ GO
 ```
 ![image](https://github.com/JoshuaSequeira2000/SQL-Project-1-Human-Resources-Data-Analysis/assets/92262753/85c16497-3860-4a4b-bbd8-ec078730136f)
 
-#### 6) Multi Statement Table Function to the employee with the highest salary based on the department_ID. 
+#### 6) Multi Statement Table Function to check the employee with the highest salary based on the department_ID. 
 ```
-create function Highest_Dept_Salary(@DepartmentID tinyint)
+create function Highest_Dept_Salary(@DepartmentID tinyint) 
 returns @ReturnValue table
 (Employee_ID int, Employee_First_Name varchar(50), Employee_Last_Name varchar(50), Salary int, Salary_Rank tinyint,
  Department_Name varchar(20), Department_ID tinyint)
